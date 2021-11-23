@@ -1,5 +1,3 @@
-import './style.css'
-
 import { startTimer, stopTimer, resetTimer } from "./stopwatch";
 
 const cards = new Set();
