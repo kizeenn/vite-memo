@@ -1,4 +1,5 @@
 import { startTimer, stopTimer, resetTimer } from "./stopwatch";
+import { createValue } from "@vzn/reactivity";
 
 const companies = [
   "netflix",
@@ -11,15 +12,14 @@ const companies = [
   "vscode",
 ];
 
-const selectedCards = new Map();
+const selectedCards = new Set();
 const cardStack = new Set();
 
-export let moveCount = 0;
-export let stopwatch = '00:00:00';
 let points = 0;
-let onTimeChange = () => {};
-let onCounterChange = () => {};
-let onEndGame = () => {};
+
+export const [getMoveCount, setMoveCount] = createValue(0);
+export const [getStopwatch, setStopwatch] = createValue("00:00:00");
+export const [isEndGame, setEndGame] = createValue(false);
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -28,70 +28,66 @@ function shuffleArray(array) {
   }
 }
 
-export function setOnTimeChange(callback) {
-  onTimeChange = callback;
-}
-
-export function setOnCounterChange(callback) {
-  onCounterChange = callback
-}
-
-export function setOnEndGame(callback) {
-  onEndGame = callback
-}
-
 function endGame() {
   stopTimer();
-  onEndGame();
+  setEndGame(true);
 }
 
 function checkIfMatch() {
-  const [firstCard, secondCard] = [...selectedCards.keys()];
+  const [firstCard, secondCard] = [...selectedCards];
   return firstCard.name === secondCard.name;
 }
 
-function moveCounter() {
-  onCounterChange(++moveCount)
-}
-
-export function chooseCard(card, onFlip, onCover) {
-  if (moveCount === 0) startTimer((time) => {
-    stopwatch = time;
-    onTimeChange(time);
-  });
+export function chooseCard(card) {
+  if (getMoveCount() === 0) startTimer((time) => setStopwatch(time));
 
   if (selectedCards.has(card)) return;
 
   if (selectedCards.size === 2) {
-    [...selectedCards.values()].forEach((fn) => fn());
+    [...selectedCards].forEach((card) => card.setVisibility(false));
     selectedCards.clear();
   }
 
-  selectedCards.set(card, onCover);
+  selectedCards.add(card);
 
-  moveCounter();
-  onFlip();
+  setMoveCount(getMoveCount() + 1);
+
+  card.setVisibility(true);
 
   if (selectedCards.size < 2) return;
 
   if (!checkIfMatch()) return;
 
-  selectedCards.clear();
   points++;
 
-  if (points === 1) endGame();
+  if (points === 1) return endGame();
+
+  selectedCards.clear();
 }
 
-function resetGame() {
-  moveCount = 0;
+export function resetGame() {
+  setMoveCount(0);
 
   points = 0;
 
   resetTimer();
 
-  [...selectedCards.values()].forEach((fn) => fn());
+  setEndGame(false);
+
+  [...selectedCards].forEach((card) => card.setVisibility(false));
+  selectedCards.clear();
 
   initGame();
+}
+
+function createCard(name) {
+  const [isVisible, setVisibility] = createValue(false);
+
+  return {
+    name,
+    isVisible,
+    setVisibility,
+  };
 }
 
 export function initGame() {
@@ -100,8 +96,8 @@ export function initGame() {
   cardStack.clear();
 
   companies.forEach((company) => {
-    cards.push({ name: company });
-    cards.push({ name: company });
+    cards.push(createCard(company));
+    cards.push(createCard(company));
   });
 
   shuffleArray(cards);

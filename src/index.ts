@@ -2,12 +2,13 @@ import "./style.css";
 import {
   chooseCard,
   initGame,
-  setOnTimeChange,
-  setOnCounterChange,
-  setOnEndGame,
-  moveCount,
-  stopwatch,
+  getStopwatch,
+  isEndGame,
+  getMoveCount,
+  resetGame,
 } from "./game";
+
+import { root, reactive, onCleanup } from "@vzn/reactivity";
 
 function PopupPlayAgainButton(): HTMLElement {
   const element = document.createElement("button");
@@ -16,6 +17,7 @@ function PopupPlayAgainButton(): HTMLElement {
   element.id = "play-again";
   element.classList.add("button--play-again");
   element.innerText = "play again";
+  element.addEventListener("click", resetGame);
 
   return element;
 }
@@ -24,7 +26,7 @@ function PopupTime(): HTMLElement {
   const element = document.createElement("p");
 
   element.classList.add("popup__content__timer");
-  element.innerText = `in ${stopwatch}`;
+  element.innerText = `in ${getStopwatch()}`;
 
   return element;
 }
@@ -33,7 +35,7 @@ function PopupMoves(): HTMLElement {
   const element = document.createElement("p");
 
   element.classList.add("popup__content__moves");
-  element.innerText = `You made ${moveCount} moves`;
+  element.innerText = `You made ${getMoveCount()} moves`;
 
   return element;
 }
@@ -80,7 +82,7 @@ function Popup(): HTMLElement {
   return element;
 }
 
-function Card(card: { name: string }): HTMLElement {
+function Card(card: { name: string; isVisible: () => boolean }): HTMLElement {
   const element = document.createElement("div");
   const reverseImg = document.createElement("img");
   const obverseImg = document.createElement("img");
@@ -96,24 +98,25 @@ function Card(card: { name: string }): HTMLElement {
 
   element.appendChild(reverseImg);
 
-  element.addEventListener("click", () => {
-    if (lockClick) return;
+  reactive(() => {
+    if (card.isVisible()) {
+      element.appendChild(obverseImg);
+      element.classList.add("flip");
+      lockClick = true;
 
-    chooseCard(
-      card,
-      () => {
-        element.appendChild(obverseImg);
-        element.classList.add("flip");
-        lockClick = true;
-      },
-      () => {
+      onCleanup(() => {
         element.classList.remove("flip");
         setTimeout(() => {
           element.removeChild(obverseImg);
           lockClick = false;
         }, 100);
-      }
-    );
+      });
+    }
+  });
+
+  element.addEventListener("click", () => {
+    if (lockClick) return;
+    chooseCard(card);
   });
 
   // element.removeChild(obverseImg);
@@ -135,6 +138,8 @@ function MemoryGame(): HTMLElement {
   return element;
 }
 
+//remove old cards add new cards
+
 function ResetGameButton(): HTMLElement {
   const element = document.createElement("button");
 
@@ -142,6 +147,7 @@ function ResetGameButton(): HTMLElement {
   element.id = "reset-game";
   element.classList.add("button--reset-game");
   element.innerText = "reset game";
+  element.addEventListener("click", resetGame);
 
   return element;
 }
@@ -150,10 +156,9 @@ function Moves(): HTMLElement {
   const element = document.createElement("div");
 
   element.classList.add("score-panel__moves");
-  element.innerText = "0 moves";
 
-  setOnCounterChange((moves: number) => {
-    element.innerText = `${moves} moves`;
+  reactive(() => {
+    element.innerText = `${getMoveCount()} moves`;
   });
 
   return element;
@@ -164,10 +169,9 @@ function Stopwatch(): HTMLElement {
 
   element.id = "display";
   element.classList.add("score-panel__stopwatch");
-  element.innerText = "00:00:00";
 
-  setOnTimeChange((time: string) => {
-    element.innerText = time;
+  reactive(() => {
+    element.innerText = getStopwatch();
   });
 
   return element;
@@ -191,8 +195,15 @@ function App(): HTMLElement {
   element.appendChild(ScorePanel());
   element.appendChild(MemoryGame());
 
-  setOnEndGame(() => {
-    element.appendChild(Popup());
+  reactive(() => {
+    if (isEndGame() === true) {
+      const popup = Popup();
+      element.appendChild(popup);
+
+      onCleanup(() => {
+        element.removeChild(popup);
+      });
+    }
   });
 
   return element;
@@ -202,4 +213,6 @@ function render(element: HTMLElement) {
   document.body.appendChild(element);
 }
 
-render(App());
+root(() => {
+  render(App());
+});
