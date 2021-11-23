@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <div>
+      <div id="display" class="stopwatch">
+        00:00:00
+      </div>
+
+      <div class="moves">
+        <p><span id="moves__counter">0</span> moves</p>
+      </div>
+
+      <button id="resetGame" class="" type="button">reset game</button>
+    </div>
+
+    
+    <section class="memoryGame">
+      <div class="memoryGame__card" data-company="apple">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/apple.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="apple">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/apple.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="amazon">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/amazon.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="amazon">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/amazon.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="starbucks">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/starbucks.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="starbucks">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/starbucks.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="tesla">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/tesla.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="tesla">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/tesla.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="vscode">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/vscode.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="vscode">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/vscode.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="netflix">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/netflix.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="netflix">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/netflix.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="spotify">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/spotify.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="spotify">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/spotify.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="kfc">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/kfc.png" />
+      </div>
+
+      <div class="memoryGame__card" data-company="kfc">
+        <img class="memoryGame__card__back" src="img/klogo.png" />
+        <img class="memoryGame__card__front" src="img/kfc.png" />
+      </div>
+    </section>
+
+    <div id="popup" class="popup">
+      <div class="popup__overlay">      
+        <div class="popup__content">
+          <h2 class="popup__header">Congratulations 🎉</h2>
+          <p class="popup__moves">You made <span id=finalMove></span> moves</p>
+          <p class="popup__time">in <span id=totalTime></span></p>
+          <button type="button" id="playAgain" class="popup__content__play-again">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

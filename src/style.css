@@ -1,0 +1,197 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+main {
+  height: 400px;
+  width: 500px;
+  margin: auto;
+}
+
+body {
+  height: 100vh;
+  display:flex;
+  background: #eee;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+header {
+  text-align: center;
+}
+
+.header__welcome {
+  color: #308aa0;
+  font-size: 72px;
+}
+
+.header__game-name {
+  color: #000000;
+  font-size: 48px;
+}
+
+.header__bold {
+  font-weight: 600;
+}
+
+.button {
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.button__primary {
+  font-weight: 600;
+  border: 2px solid rgb(0, 0, 0);
+  background-color: #308aa0;
+  color: rgb(240, 240, 240);
+}
+
+.button__primary:hover {
+  background-color: #297588;
+  cursor: pointer;
+}
+
+.form {
+  text-align: center;
+}
+
+.form__input {
+  padding: 10px;
+  font-weight: 900;
+  font-size: 20px;
+  border-radius: 5px;
+  margin-top: 40px;
+}
+
+.memoryGame {
+  width: 640px;
+  height: 640px;
+  display: flex;
+  margin: auto;
+  flex-wrap: wrap;
+  perspective: 1000px;
+}
+
+.memoryGame__card {
+  width: 23%;
+  height: 25%;
+  margin: 5px;
+  position: relative;
+  transform: scale(1);
+  transform-style: preserve-3d;
+  transition: transform .5s
+}
+
+.memoryGame__card__front, 
+.memoryGame__card__back {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  position: absolute;
+  border-radius: 5px;
+  background: #61615e;
+  backface-visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.memoryGame__card__front {
+  transform: rotateY(180deg);
+}
+
+.memoryGame__card:active {
+  transform: scale(.97);
+  transition: transform .1s;
+}
+
+.memoryGame__card.flip {
+  transform: rotateY(180deg)
+}
+
+
+.stopwatch {
+  width: 100%;
+  font-size: 72px;
+  text-align: center;
+  margin: auto;
+  margin-top: 30px;
+  position: absolute;
+}
+
+.moves {
+  width: 100%;
+  font-size: 20px;
+  text-align: center;
+  margin: auto;
+  margin-top: 5px;
+  position: absolute;
+	color: #333;
+	font-family: Tahoma, Arial, sans-serif;
+  font-weight: 900;
+}
+
+.popup {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+}
+
+.popup:target {
+	visibility: visible;
+	opacity: 1;
+}
+
+.popup__overlay {
+	margin: 70px auto;
+	padding: 20px;
+	background: #ffffff;
+	border-radius: 5px;
+	width: 85%;
+	position: relative;
+	transition: all 5s ease-in-out;
+	font-family: 'Gloria Hallelujah', cursive;
+}
+
+.popup__content {
+  max-height: 30%;
+	overflow: auto;
+	text-align: center;
+}
+
+.popup__header{
+  margin-top: 0;
+	color: #333;
+	font-family: Tahoma, Arial, sans-serif;
+  text-align: center;
+  margin: auto;
+  font-weight: 900;
+}
+
+.popup__time {
+	color: #333;
+	font-family: Tahoma, Arial, sans-serif;
+  text-align: center;
+  margin: auto;
+  font-size: 32px;
+}
+
+.popup__moves {
+	color: #333;
+	font-family: Tahoma, Arial, sans-serif;
+  text-align: center;
+  margin: auto;
+  font-size: 32px;
+}
+
+.show {
+	visibility: visible !important;
+	opacity: 100 !important;
+}
