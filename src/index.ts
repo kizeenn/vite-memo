@@ -1,4 +1,13 @@
 import "./style.css";
+import {
+  chooseCard,
+  initGame,
+  setOnTimeChange,
+  setOnCounterChange,
+  setOnEndGame,
+  moveCount,
+  stopwatch,
+} from "./game";
 
 function PopupPlayAgainButton(): HTMLElement {
   const element = document.createElement("button");
@@ -15,7 +24,7 @@ function PopupTime(): HTMLElement {
   const element = document.createElement("p");
 
   element.classList.add("popup__content__timer");
-  element.innerText = " in 00:00:00";
+  element.innerText = `in ${stopwatch}`;
 
   return element;
 }
@@ -24,7 +33,7 @@ function PopupMoves(): HTMLElement {
   const element = document.createElement("p");
 
   element.classList.add("popup__content__moves");
-  element.innerText = "You made 0 moves";
+  element.innerText = `You made ${moveCount} moves`;
 
   return element;
 }
@@ -71,16 +80,43 @@ function Popup(): HTMLElement {
   return element;
 }
 
-function Card(): HTMLElement {
+function Card(card: { name: string }): HTMLElement {
   const element = document.createElement("div");
+  const reverseImg = document.createElement("img");
+  const obverseImg = document.createElement("img");
+  let lockClick = false;
+
+  reverseImg.src = "/img/klogo.png";
+  reverseImg.classList.add("memory-game__card__back");
+
+  obverseImg.src = `/img/${card.name}.png`;
+  obverseImg.classList.add("memory-game__card__front");
+
   element.classList.add("memory-game__card");
 
-  const img = document.createElement("img");
+  element.appendChild(reverseImg);
 
-  img.classList.add("memory-game__card__back");
-  img.src = "/img/klogo.png";
+  element.addEventListener("click", () => {
+    if (lockClick) return;
 
-  element.appendChild(img);
+    chooseCard(
+      card,
+      () => {
+        element.appendChild(obverseImg);
+        element.classList.add("flip");
+        lockClick = true;
+      },
+      () => {
+        element.classList.remove("flip");
+        setTimeout(() => {
+          element.removeChild(obverseImg);
+          lockClick = false;
+        }, 100);
+      }
+    );
+  });
+
+  // element.removeChild(obverseImg);
 
   return element;
 }
@@ -90,7 +126,11 @@ function MemoryGame(): HTMLElement {
 
   element.classList.add("memory-game");
 
-  element.appendChild(Card());
+  const cardStack = initGame();
+
+  cardStack.forEach((card) => {
+    element.appendChild(Card(card));
+  });
 
   return element;
 }
@@ -112,6 +152,10 @@ function Moves(): HTMLElement {
   element.classList.add("score-panel__moves");
   element.innerText = "0 moves";
 
+  setOnCounterChange((moves: number) => {
+    element.innerText = `${moves} moves`;
+  });
+
   return element;
 }
 
@@ -121,6 +165,10 @@ function Stopwatch(): HTMLElement {
   element.id = "display";
   element.classList.add("score-panel__stopwatch");
   element.innerText = "00:00:00";
+
+  setOnTimeChange((time: string) => {
+    element.innerText = time;
+  });
 
   return element;
 }
@@ -142,7 +190,10 @@ function App(): HTMLElement {
 
   element.appendChild(ScorePanel());
   element.appendChild(MemoryGame());
-  element.appendChild(Popup());
+
+  setOnEndGame(() => {
+    element.appendChild(Popup());
+  });
 
   return element;
 }

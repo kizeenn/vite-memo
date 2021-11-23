@@ -23,13 +23,13 @@ function formatTime(startDate, endDate) {
     .join(":");
 }
 
-export function startTimer(onTime) {
+export function startTimer(onTimeChange) {
   if (startTime) return;
 
   startTime = new Date();
 
   timerInterval = setInterval(() => {
-    onTime(formatTime(startTime, new Date()));
+    onTimeChange(formatTime(startTime, new Date()));
   }, 10);
 }
 

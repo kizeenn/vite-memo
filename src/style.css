@@ -102,8 +102,7 @@
 	right: 0;
 	background: rgba(0, 0, 0, 0.7);
 	transition: opacity 500ms;
-	visibility: hidden;
-	opacity: 0;
+	opacity: 1;
 }
 
 .popup:target {
@@ -151,9 +150,4 @@
   text-align: center;
   margin: auto;
   font-size: 32px;
-}
-
-.show {
-	visibility: visible !important;
-	opacity: 100 !important;
 }

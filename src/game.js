@@ -1,74 +1,82 @@
 import { startTimer, stopTimer, resetTimer } from "./stopwatch";
 
-const cards = new Set();
+const companies = [
+  "netflix",
+  "apple",
+  "amazon",
+  "kfc",
+  "spotify",
+  "starbucks",
+  "tesla",
+  "vscode",
+];
 
-const counterEl = document.getElementById("moves__counter");
-const endScreenEl = document.getElementById("popup");
-const timerEl = document.getElementById("display");
-const playAgainEl = document.getElementById("playAgain");
-const resetGameEl = document.getElementById("resetGame");
-const cardsElements = document.querySelectorAll(".memoryGame__card");
+const selectedCards = new Map();
+const cardStack = new Set();
 
-let moveCount = 0;
+export let moveCount = 0;
+export let stopwatch = '00:00:00';
 let points = 0;
+let onTimeChange = () => {};
+let onCounterChange = () => {};
+let onEndGame = () => {};
 
-function startGame() {
-  startTimer((time) => {
-    timerEl.innerText = time;
-  });
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+export function setOnTimeChange(callback) {
+  onTimeChange = callback;
+}
+
+export function setOnCounterChange(callback) {
+  onCounterChange = callback
+}
+
+export function setOnEndGame(callback) {
+  onEndGame = callback
 }
 
 function endGame() {
   stopTimer();
-
-  endScreenEl.classList.add("show");
-
-  document.getElementById("finalMove").innerText = moveCount;
-  document.getElementById("totalTime").innerText = timerEl.innerText;
-}
-
-function coverCards() {
-  const [firstCard, secondCard] = [...cards];
-  firstCard.classList.remove("flip");
-  secondCard.classList.remove("flip");
-}
-
-function disableCards() {
-  const [firstCard, secondCard] = [...cards];
-  firstCard.removeEventListener("click", flipCard);
-  secondCard.removeEventListener("click", flipCard);
+  onEndGame();
 }
 
 function checkIfMatch() {
-  const [firstCard, secondCard] = [...cards];
-  return firstCard.dataset.company === secondCard.dataset.company;
+  const [firstCard, secondCard] = [...selectedCards.keys()];
+  return firstCard.name === secondCard.name;
 }
 
 function moveCounter() {
-  moveCount++;
-  counterEl.innerHTML = moveCount;
+  onCounterChange(++moveCount)
 }
 
-function flipCard() {
-  if (moveCount === 0) startGame();
-  if (cards.has(this)) return;
+export function chooseCard(card, onFlip, onCover) {
+  if (moveCount === 0) startTimer((time) => {
+    stopwatch = time;
+    onTimeChange(time);
+  });
 
-  if (cards.size === 2) {
-    coverCards();
-    cards.clear();
+  if (selectedCards.has(card)) return;
+
+  if (selectedCards.size === 2) {
+    [...selectedCards.values()].forEach((fn) => fn());
+    selectedCards.clear();
   }
 
-  cards.add(this);
-  this.classList.add("flip");
+  selectedCards.set(card, onCover);
 
   moveCounter();
+  onFlip();
 
-  if (cards.size < 2) return;
+  if (selectedCards.size < 2) return;
 
   if (!checkIfMatch()) return;
 
-  disableCards();
-  cards.clear();
+  selectedCards.clear();
   points++;
 
   if (points === 1) endGame();
@@ -81,23 +89,27 @@ function resetGame() {
 
   resetTimer();
 
-  endScreenEl.classList.remove("show");
-
-  cardsElements.forEach((cardEl) => cardEl.classList.remove("flip"));
+  [...selectedCards.values()].forEach((fn) => fn());
 
   initGame();
 }
 
-function initGame() {
-  cardsElements.forEach((cardEl) => cardEl.addEventListener("click", flipCard));
+export function initGame() {
+  const cards = [];
 
-  cardsElements.forEach((card) => {
-    let randomPosition = Math.floor(Math.random() * 12);
-    card.style.order = randomPosition;
+  cardStack.clear();
+
+  companies.forEach((company) => {
+    cards.push({ name: company });
+    cards.push({ name: company });
   });
+
+  shuffleArray(cards);
+
+  cards.forEach((card) => cardStack.add(card));
+
+  return cardStack;
 }
 
-initGame();
-
-playAgainEl.addEventListener("click", resetGame);
-resetGameEl.addEventListener("click", resetGame);
+// playAgainEl.addEventListener("click", resetGame);
+// resetGameEl.addEventListener("click", resetGame);
