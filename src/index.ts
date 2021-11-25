@@ -1,5 +1,5 @@
-import "./style.css";
-import { createMemoGame } from "./game";
+import "./styles/global.css";
+import { createMemoGame } from "./games/memo";
 import { root, reactive, onCleanup } from "@vzn/reactivity";
 
 const game = createMemoGame();

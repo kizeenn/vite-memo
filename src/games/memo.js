@@ -1,4 +1,4 @@
-import { createStopwatch } from "./stopwatch";
+import { createStopwatch } from "../utils/stopwatch";
 import { createValue } from "@vzn/reactivity";
 
 const companies = [
