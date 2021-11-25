@@ -1,15 +1,8 @@
 import "./style.css";
-import {
-  chooseCard,
-  initGame,
-  getStopwatch,
-  isEndGame,
-  getMoveCount,
-  resetGame,
-  getCardStack,
-} from "./game";
-
+import { createMemoGame } from "./game";
 import { root, reactive, onCleanup } from "@vzn/reactivity";
+
+const game = createMemoGame();
 
 function PopupPlayAgainButton(): HTMLElement {
   const element = document.createElement("button");
@@ -18,7 +11,7 @@ function PopupPlayAgainButton(): HTMLElement {
   element.id = "play-again";
   element.classList.add("button--play-again");
   element.innerText = "play again";
-  element.addEventListener("click", resetGame);
+  element.addEventListener("click", game.resetGame);
 
   return element;
 }
@@ -27,7 +20,7 @@ function PopupTime(): HTMLElement {
   const element = document.createElement("p");
 
   element.classList.add("popup__content__timer");
-  element.innerText = `in ${getStopwatch()}`;
+  element.innerText = `in ${game.getTime()}`;
 
   return element;
 }
@@ -36,7 +29,7 @@ function PopupMoves(): HTMLElement {
   const element = document.createElement("p");
 
   element.classList.add("popup__content__moves");
-  element.innerText = `You made ${getMoveCount()} moves`;
+  element.innerText = `You made ${game.getMoveCount()} moves`;
 
   return element;
 }
@@ -117,7 +110,7 @@ function Card(card: { name: string; isVisible: () => boolean }): HTMLElement {
 
   element.addEventListener("click", () => {
     if (lockClick) return;
-    chooseCard(card);
+    game.chooseCard(card);
   });
 
   return element;
@@ -128,12 +121,12 @@ function MemoryGame(): HTMLElement {
 
   element.classList.add("memory-game");
 
-  initGame();
+  game.initCardStack();
 
   reactive(() => {
     const cardsElements: HTMLElement[] = [];
 
-    getCardStack().forEach((card) => {
+    game.getCardStack().forEach((card) => {
       const cardElement = Card(card);
       cardsElements.push(cardElement);
       element.appendChild(cardElement);
@@ -155,7 +148,7 @@ function ResetGameButton(): HTMLElement {
   element.id = "reset-game";
   element.classList.add("button--reset-game");
   element.innerText = "reset game";
-  element.addEventListener("click", resetGame);
+  element.addEventListener("click", game.resetGame);
 
   return element;
 }
@@ -166,7 +159,7 @@ function Moves(): HTMLElement {
   element.classList.add("score-panel__moves");
 
   reactive(() => {
-    element.innerText = `${getMoveCount()} moves`;
+    element.innerText = `${game.getMoveCount()} moves`;
   });
 
   return element;
@@ -179,7 +172,7 @@ function Stopwatch(): HTMLElement {
   element.classList.add("score-panel__stopwatch");
 
   reactive(() => {
-    element.innerText = getStopwatch();
+    element.innerText = game.getTime();
   });
 
   return element;
@@ -204,7 +197,7 @@ function App(): HTMLElement {
   element.appendChild(MemoryGame());
 
   reactive(() => {
-    if (isEndGame() === true) {
+    if (game.isEndGame() === true) {
       const popup = Popup();
       element.appendChild(popup);
 
