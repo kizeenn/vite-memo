@@ -6,6 +6,7 @@ import {
   isEndGame,
   getMoveCount,
   resetGame,
+  getCardStack,
 } from "./game";
 
 import { root, reactive, onCleanup } from "@vzn/reactivity";
@@ -119,8 +120,6 @@ function Card(card: { name: string; isVisible: () => boolean }): HTMLElement {
     chooseCard(card);
   });
 
-  // element.removeChild(obverseImg);
-
   return element;
 }
 
@@ -129,16 +128,25 @@ function MemoryGame(): HTMLElement {
 
   element.classList.add("memory-game");
 
-  const cardStack = initGame();
+  initGame();
 
-  cardStack.forEach((card) => {
-    element.appendChild(Card(card));
+  reactive(() => {
+    const cardsElements: HTMLElement[] = [];
+
+    getCardStack().forEach((card) => {
+      const cardElement = Card(card);
+      cardsElements.push(cardElement);
+      element.appendChild(cardElement);
+    });
+
+    onCleanup(() => {
+      cardsElements.forEach((cardElement) => {
+        cardElement.remove();
+      });
+    });
   });
-
   return element;
 }
-
-//remove old cards add new cards
 
 function ResetGameButton(): HTMLElement {
   const element = document.createElement("button");

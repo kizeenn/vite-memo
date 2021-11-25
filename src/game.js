@@ -1,4 +1,10 @@
-import { startTimer, stopTimer, resetTimer } from "./stopwatch";
+import {
+  startTimer,
+  stopTimer,
+  resetTimer,
+  getTime,
+  setTime,
+} from "./stopwatch";
 import { createValue } from "@vzn/reactivity";
 
 const companies = [
@@ -13,13 +19,14 @@ const companies = [
 ];
 
 const selectedCards = new Set();
-const cardStack = new Set();
 
 let points = 0;
 
-export const [getMoveCount, setMoveCount] = createValue(0);
-export const [getStopwatch, setStopwatch] = createValue("00:00:00");
-export const [isEndGame, setEndGame] = createValue(false);
+const [getMoveCount, setMoveCount] = createValue(0);
+const [isEndGame, setEndGame] = createValue(false);
+const [getCardStack, setCardStack] = createValue(new Set());
+
+export { getMoveCount, isEndGame, getCardStack, getTime as getStopwatch };
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -39,7 +46,7 @@ function checkIfMatch() {
 }
 
 export function chooseCard(card) {
-  if (getMoveCount() === 0) startTimer((time) => setStopwatch(time));
+  if (getMoveCount() === 0) startTimer();
 
   if (selectedCards.has(card)) return;
 
@@ -74,6 +81,8 @@ export function resetGame() {
 
   setEndGame(false);
 
+  setTime("00:00:00");
+
   [...selectedCards].forEach((card) => card.setVisibility(false));
   selectedCards.clear();
 
@@ -93,8 +102,6 @@ function createCard(name) {
 export function initGame() {
   const cards = [];
 
-  cardStack.clear();
-
   companies.forEach((company) => {
     cards.push(createCard(company));
     cards.push(createCard(company));
@@ -102,9 +109,11 @@ export function initGame() {
 
   shuffleArray(cards);
 
+  const cardStack = new Set();
+
   cards.forEach((card) => cardStack.add(card));
 
-  return cardStack;
+  setCardStack(cardStack);
 }
 
 // playAgainEl.addEventListener("click", resetGame);
