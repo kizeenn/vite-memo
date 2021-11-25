@@ -1,10 +1,4 @@
-import {
-  startTimer,
-  stopTimer,
-  resetTimer,
-  getTime,
-  setTime,
-} from "./stopwatch";
+import { createStopwatch } from "./stopwatch";
 import { createValue } from "@vzn/reactivity";
 
 const companies = [
@@ -22,6 +16,8 @@ const selectedCards = new Set();
 
 let points = 0;
 
+const stopwatch = createStopwatch();
+const { getTime } = stopwatch;
 const [getMoveCount, setMoveCount] = createValue(0);
 const [isEndGame, setEndGame] = createValue(false);
 const [getCardStack, setCardStack] = createValue(new Set());
@@ -36,7 +32,7 @@ function shuffleArray(array) {
 }
 
 function endGame() {
-  stopTimer();
+  stopwatch.stop();
   setEndGame(true);
 }
 
@@ -46,7 +42,7 @@ function checkIfMatch() {
 }
 
 export function chooseCard(card) {
-  if (getMoveCount() === 0) startTimer();
+  if (getMoveCount() === 0) stopwatch.start();
 
   if (selectedCards.has(card)) return;
 
@@ -77,7 +73,7 @@ export function resetGame() {
 
   points = 0;
 
-  resetTimer();
+  stopwatch.reset();
 
   setEndGame(false);
 
@@ -115,6 +111,3 @@ export function initGame() {
 
   setCardStack(cardStack);
 }
-
-// playAgainEl.addEventListener("click", resetGame);
-// resetGameEl.addEventListener("click", resetGame);
