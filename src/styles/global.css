@@ -4,68 +4,50 @@
   box-sizing: border-box;
 }
 
-main {
-  height: 400px;
-  width: 500px;
-  margin: auto;
+/* SCORE PANEL */
+
+.score-panel{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-body {
-  height: 100vh;
-  display:flex;
-  background: #eee;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
-}
-
-header {
-  text-align: center;
-}
-
-.header__welcome {
-  color: #308aa0;
+.score-panel__stopwatch{
   font-size: 72px;
+  text-align: center;
+  color: #333;
+	font-family: Tahoma, Arial, sans-serif;
+  font-weight: 900;
 }
 
-.header__game-name {
-  color: #000000;
-  font-size: 48px;
+.score-panel__moves {
+  font-size: 20px;
+  text-align: center;
+	color: #333;
+	font-family: Tahoma, Arial, sans-serif;
+  font-weight: 900;
 }
 
-.header__bold {
-  font-weight: 600;
-}
-
-.button {
+.button--reset-game {
   font-size: 20px;
   padding: 10px;
   border-radius: 5px;
-}
-
-.button__primary {
   font-weight: 600;
   border: 2px solid rgb(0, 0, 0);
-  background-color: #308aa0;
+  background-color: #444647;
   color: rgb(240, 240, 240);
+  margin: 10px 0px 10px 0px
 }
 
-.button__primary:hover {
-  background-color: #297588;
+.button--reset-game:hover {
+  background-color: #333;
   cursor: pointer;
 }
 
-.form {
-  text-align: center;
-}
+/* GAME */
 
-.form__input {
-  padding: 10px;
-  font-weight: 900;
-  font-size: 20px;
-  border-radius: 5px;
-  margin-top: 40px;
-}
-
-.memoryGame {
+.memory-game {
   width: 640px;
   height: 640px;
   display: flex;
@@ -74,7 +56,7 @@ header {
   perspective: 1000px;
 }
 
-.memoryGame__card {
+.memory-game__card {
   width: 23%;
   height: 25%;
   margin: 5px;
@@ -84,8 +66,8 @@ header {
   transition: transform .5s
 }
 
-.memoryGame__card__front, 
-.memoryGame__card__back {
+.memory-game__card__front, 
+.memory-game__card__back {
   width: 100%;
   height: 100%;
   padding: 20px;
@@ -97,40 +79,20 @@ header {
   user-select: none;
 }
 
-.memoryGame__card__front {
+.memory-game__card__front {
   transform: rotateY(180deg);
 }
 
-.memoryGame__card:active {
+.memory-game__card:active {
   transform: scale(.97);
   transition: transform .1s;
 }
 
-.memoryGame__card.flip {
+.memory-game__card.flip {
   transform: rotateY(180deg)
 }
 
-
-.stopwatch {
-  width: 100%;
-  font-size: 72px;
-  text-align: center;
-  margin: auto;
-  margin-top: 30px;
-  position: absolute;
-}
-
-.moves {
-  width: 100%;
-  font-size: 20px;
-  text-align: center;
-  margin: auto;
-  margin-top: 5px;
-  position: absolute;
-	color: #333;
-	font-family: Tahoma, Arial, sans-serif;
-  font-weight: 900;
-}
+/* POPUP */
 
 .popup {
 	position: fixed;
@@ -140,8 +102,7 @@ header {
 	right: 0;
 	background: rgba(0, 0, 0, 0.7);
 	transition: opacity 500ms;
-	visibility: hidden;
-	opacity: 0;
+	opacity: 1;
 }
 
 .popup:target {
@@ -189,9 +150,4 @@ header {
   text-align: center;
   margin: auto;
   font-size: 32px;
-}
-
-.show {
-	visibility: visible !important;
-	opacity: 100 !important;
 }
