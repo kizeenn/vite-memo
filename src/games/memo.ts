@@ -17,7 +17,7 @@ export interface MemoGame {
   getTime: () => string;
 }
 
-const companies = [
+const cardNames = [
   "netflix",
   "apple",
   "amazon",
@@ -28,6 +28,11 @@ const companies = [
   "vscode",
 ];
 
+/**
+ * Shuffle cards
+ * ? https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+ * @param {Array<any>} array
+ */
 function shuffleArray(array: Array<any>): void {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -45,6 +50,12 @@ function createCard(name: string): Card {
   } as const;
 }
 
+/**
+ * Create play board, allows to pick card, match them and reset game.
+ *
+ * @export
+ * @return {*}  {MemoGame}
+ */
 export function createMemoGame(): MemoGame {
   const selectedCards = new Set<Card>();
   const stopwatch = createStopwatch();
@@ -57,15 +68,18 @@ export function createMemoGame(): MemoGame {
   function initCardStack() {
     const cards: Array<Card> = [];
 
-    companies.forEach((company) => {
-      cards.push(createCard(company));
-      cards.push(createCard(company));
+    // creates new cards with image and name
+    cardNames.forEach((cardName) => {
+      cards.push(createCard(cardName));
+      cards.push(createCard(cardName));
     });
 
+    // shuffle cards position
     shuffleArray(cards);
 
     const cardStack = new Set<Card>();
 
+    // creating card stack from cards, lets manipulate on whole stack
     cards.forEach((card) => cardStack.add(card));
 
     setCardStack(cardStack);
@@ -76,32 +90,44 @@ export function createMemoGame(): MemoGame {
 
     points = 0;
 
+    // stops stopwatch and lets run it once again
     stopwatch.reset();
 
     setEndGame(false);
 
-    [...selectedCards].forEach((card) => card.setVisibility(false));
+    // cover selected cards
+    selectedCards.forEach((card) => card.setVisibility(false));
     selectedCards.clear();
 
+    // creating new card stack
     initCardStack();
   }
 
   function chooseCard(card: Card) {
+    // prevent from choosing card after end game
+    if (isEndGame()) return;
+
+    // starts counting time when 1st card is chosen
     if (getMoveCount() === 0) stopwatch.start();
 
+    // prevent from choosing the same card twice
     if (selectedCards.has(card)) return;
 
     if (selectedCards.size === 2) {
-      [...selectedCards].forEach((card) => card.setVisibility(false));
+      // cover selected cards
+      selectedCards.forEach((card) => card.setVisibility(false));
       selectedCards.clear();
     }
 
     selectedCards.add(card);
 
+    // increment move count
     setMoveCount(getMoveCount() + 1);
 
+    // show card content
     card.setVisibility(true);
 
+    // skip if only one card is selected
     if (selectedCards.size < 2) return;
 
     const [firstCard, secondCard] = [...selectedCards];
@@ -110,12 +136,14 @@ export function createMemoGame(): MemoGame {
 
     points++;
 
-    if (points === 1) {
+    // if number of point equal number of pairs
+    if (points === cardNames.length) {
       stopwatch.stop();
       setEndGame(true);
       return;
     }
 
+    // allow to choose another card after match
     selectedCards.clear();
   }
 
