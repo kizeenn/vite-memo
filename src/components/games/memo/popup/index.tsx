@@ -17,7 +17,7 @@ export default function Popup(props: PopupProps) {
           <button
             type="button"
             class="button--play--again"
-            on:click={props.game.resetGame}
+            onClick={props.game.resetGame}
           >
             play again
           </button>

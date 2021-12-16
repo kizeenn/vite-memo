@@ -13,11 +13,7 @@ export default function MemoGame() {
 
       <div class="score-panel__moves">{game.getMoveCount} moves</div>
 
-      <button
-        on:click={game.resetGame}
-        type="button"
-        class="button--reset-game"
-      >
+      <button onClick={game.resetGame} type="button" class="button--reset-game">
         reset game
       </button>
 
