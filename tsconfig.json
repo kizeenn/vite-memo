@@ -15,7 +15,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "isolatedModules": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "jest"],
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
     "jsxImportSource": "@vzn/rendering",

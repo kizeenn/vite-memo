@@ -15,6 +15,7 @@ export interface MemoGame {
   getCardStack: () => Set<Card>;
   isEndGame: () => boolean;
   getTime: () => string;
+  getPoints: () => number;
 }
 
 const cardNames = [
@@ -62,8 +63,7 @@ export function createMemoGame(): MemoGame {
   const [getCardStack, setCardStack] = createValue<Set<Card>>(new Set());
   const [getMoveCount, setMoveCount] = createValue(0);
   const [isEndGame, setEndGame] = createValue(false);
-
-  let points = 0;
+  const [getPoints, setPoints] = createValue(0);
 
   function initCardStack() {
     const cards: Array<Card> = [];
@@ -88,7 +88,7 @@ export function createMemoGame(): MemoGame {
   function resetGame() {
     setMoveCount(0);
 
-    points = 0;
+    setPoints(0);
 
     // stops stopwatch and lets run it once again
     stopwatch.reset();
@@ -134,10 +134,10 @@ export function createMemoGame(): MemoGame {
 
     if (firstCard.name !== secondCard.name) return;
 
-    points++;
+    setPoints(getPoints() + 1);
 
     // if number of point equal number of pairs
-    if (points === cardNames.length) {
+    if (getPoints() === cardNames.length) {
       stopwatch.stop();
       setEndGame(true);
       return;
@@ -154,6 +154,7 @@ export function createMemoGame(): MemoGame {
     getMoveCount,
     getCardStack,
     isEndGame,
+    getPoints,
     getTime: stopwatch.getTime,
   } as const;
 }
