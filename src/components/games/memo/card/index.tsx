@@ -23,7 +23,7 @@ export function CardBlock(props: CardBlockProps) {
 
   return (
     <div
-      on:click={() => {
+      onClick={() => {
         if (showObverse()) return;
         props.game.chooseCard(props.card);
       }}
