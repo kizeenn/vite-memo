@@ -17,5 +17,8 @@
     "vite": "^2.9.13",
     "vite-plugin-vzn": "^0.2.4",
     "vite-tsconfig-paths": "^3.5.0"
+  },
+  "dependencies": {
+    "jest-environment-jsdom": "^28.1.2"
   }
 }
