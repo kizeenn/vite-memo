@@ -8,16 +8,26 @@ export default function MemoGame() {
   game.initCardStack();
 
   return (
-    <div class="score-panel">
-      <div class="score-panel__stopwatch">{game.getTime}</div>
+    <div class="h-screen flex flex-col items-center">
+      <div class="flex justify-evenly items-center bg-slate-800 sm:rounded-b-full w-full">
+        <p class="text-lg sm:text-4xl text-gray-200 font-bold">
+          {game.getMoveCount} moves
+        </p>
 
-      <div class="score-panel__moves">{game.getMoveCount} moves</div>
+        <p class="text-3xl sm:text-6xl text-gray-200 font-bold min-w-[120px] sm:min-w-[270px] text-center">
+          {game.getTime}
+        </p>
 
-      <button onClick={game.resetGame} type="button" class="button--reset-game">
-        reset game
-      </button>
+        <button
+          onClick={game.resetGame}
+          type="button"
+          class="text-lg sm:text-3xl text-center text-gray-200 font-bold"
+        >
+          reset game
+        </button>
+      </div>
 
-      <div class="memory-game">
+      <div class="perspective-1k grid grid-cols-4 mt-5 gap-4 px-4 w-full sm:w-3/4 lg:w-2/5">
         <For each={[...game.getCardStack()]}>
           {(card) => <CardBlock card={card} game={game} />}
         </For>
