@@ -38,7 +38,9 @@ const perspective = plugin(function ({ addUtilities }) {
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    fontFamily: {
+      body: ["Helvetica"],
+    },
   },
   plugins: [rotateY, backfaceVisibility, transformStyle, perspective],
 };
