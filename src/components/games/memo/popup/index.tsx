@@ -6,22 +6,22 @@ export interface PopupProps {
 
 export default function Popup(props: PopupProps) {
   return (
-    <div class="popup">
-      <div class="popup__overlay">
-        <div class="popup__content">
-          <h2 class="popup__content__header">Congratulations 🎉</h2>
-          <p class="popup__content__moves">
-            You made {props.game.getMoveCount} moves
-          </p>
-          <p class="popup__content__timer"> in {props.game.getTime}</p>
-          <button
-            type="button"
-            class="button--play--again"
-            onClick={props.game.resetGame}
-          >
-            play again
-          </button>
-        </div>
+    <div class="absolute h-full w-full flex items-center justify-center">
+      <div class="absolute bg-black h-full w-full opacity-25" />
+      <div class="relative bg-gray-50 w-1/3 h-1/4 rounded-md border border-gray-300 py-5 flex flex-col justify-between items-center">
+        <h2 class="font-bold text-3xl">Congratulations 🎉</h2>
+
+        <p class="text-lg">
+          You made {props.game.getMoveCount} moves in {props.game.getTime}
+        </p>
+
+        <button
+          type="button"
+          class="rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-300 px-4 py-2 text-sm"
+          onClick={props.game.resetGame}
+        >
+          play again
+        </button>
       </div>
     </div>
   );
