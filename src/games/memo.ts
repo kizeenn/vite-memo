@@ -21,7 +21,7 @@ export interface MemoGame {
 const cardNames = [
   "netflix",
   "apple",
-  "amazon",
+  "google",
   "kfc",
   "spotify",
   "starbucks",
