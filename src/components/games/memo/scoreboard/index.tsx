@@ -6,8 +6,8 @@ export interface ScoreboardProps {
 
 export default function Scoreboard(props: ScoreboardProps) {
   return (
-    <div class="flex justify-evenly items-center bg-slate-800 sm:rounded-b-full w-full">
-      <p class="text-lg sm:text-4xl text-gray-200 font-bold min-w-[120px] sm:min-w-[270px]">
+    <div class="flex justify-between px-4 sm:px-10 items-center bg-slate-800 sm:rounded-b-full w-full lg:w-2/3">
+      <p class="text-lg md:text-2xl text-gray-200 font-bold min-w-[105px]">
         {props.game.getMoveCount} moves
       </p>
 
@@ -18,7 +18,7 @@ export default function Scoreboard(props: ScoreboardProps) {
       <button
         onClick={props.game.resetGame}
         type="button"
-        class="text-lg sm:text-3xl text-center text-gray-200 font-bold min-w-[120px] sm:min-w-[270px]"
+        class="text-lg md:text-2xl text-center text-gray-200 font-bold"
       >
         reset game
       </button>
