@@ -65,6 +65,7 @@ export function createMemoGame(): MemoGame {
   const [isEndGame, setEndGame] = createValue(false);
   const [getPoints, setPoints] = createValue(0);
 
+  // initialize card stack, lets manipulate on it
   function initCardStack() {
     const cards: Array<Card> = [];
 
@@ -79,12 +80,13 @@ export function createMemoGame(): MemoGame {
 
     const cardStack = new Set<Card>();
 
-    // creating card stack from cards, lets manipulate on whole stack
+    // creating card stack from cards
     cards.forEach((card) => cardStack.add(card));
 
     setCardStack(cardStack);
   }
 
+  // reset progress of current game
   function resetGame() {
     setMoveCount(0);
 
@@ -103,6 +105,7 @@ export function createMemoGame(): MemoGame {
     initCardStack();
   }
 
+  // flip, match and cover cards
   function chooseCard(card: Card) {
     // prevent from choosing card after end game
     if (isEndGame()) return;
@@ -132,11 +135,13 @@ export function createMemoGame(): MemoGame {
 
     const [firstCard, secondCard] = [...selectedCards];
 
+    // cover cards if it's not match
     if (firstCard.name !== secondCard.name) return;
 
+    // add point if it's match
     setPoints(getPoints() + 1);
 
-    // if number of point equal number of pairs
+    // if number of point equal number of pairs end game
     if (getPoints() === cardNames.length) {
       stopwatch.stop();
       setEndGame(true);
